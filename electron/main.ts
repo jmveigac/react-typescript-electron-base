@@ -8,7 +8,7 @@ function createWindow(): BrowserWindow {
     createWindowOptions(path.join(__dirname, 'preload.js')),
   );
 
-  const devServerUrl = process.env.VITE_DEV_SERVER_URL;
+  const devServerUrl = process.env.RENDERER_DEV_SERVER_URL;
   const isDevelopment = !app.isPackaged && Boolean(devServerUrl);
 
   if (isDevelopment && devServerUrl) {

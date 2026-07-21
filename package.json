@@ -1,18 +1,17 @@
 {
   "name": "react-typescript-electron-base",
   "version": "1.0.0",
-  "description": "Minimal React, TypeScript and Electron template with secure defaults, Vite, Jest and GitHub Actions CI.",
+  "description": "Minimal React, TypeScript and Electron template with secure defaults, Jest and GitHub Actions CI.",
   "main": "dist/electron/main.js",
   "private": true,
   "scripts": {
     "start": "npm run electron:dev",
-    "dev": "vite --host 127.0.0.1",
-    "build": "vite build && tsc -p electron/tsconfig.json",
+    "dev": "node scripts/renderer.mjs --serve",
+    "build": "node scripts/renderer.mjs --build && tsc -p electron/tsconfig.json",
     "check": "tsc --noEmit && tsc -p electron/tsconfig.json --noEmit",
     "test": "jest --runInBand",
     "test:watch": "jest --watch",
-    "preview": "vite preview",
-    "electron:dev": "concurrently -k \"vite --host 127.0.0.1\" \"tsc -p electron/tsconfig.json --watch --preserveWatchOutput\" \"wait-on tcp:5173 file:dist/electron/main.js && cross-env VITE_DEV_SERVER_URL=http://127.0.0.1:5173 electron .\"",
+    "electron:dev": "concurrently -k \"node scripts/renderer.mjs --serve\" \"tsc -p electron/tsconfig.json --watch --preserveWatchOutput\" \"wait-on tcp:5173 file:dist/electron/main.js && cross-env RENDERER_DEV_SERVER_URL=http://127.0.0.1:5173 electron .\"",
     "electron:pack": "npm run build && electron-builder --dir",
     "electron:build": "npm run build && electron-builder",
     "version:patch": "npm version patch --no-git-tag-version"
@@ -48,16 +47,15 @@
     "@types/node": "24.13.3",
     "@types/react": "19.2.17",
     "@types/react-dom": "19.2.3",
-    "@vitejs/plugin-react": "6.0.3",
     "babel-jest": "30.4.1",
     "concurrently": "10.0.3",
     "cross-env": "10.1.0",
     "electron": "43.1.1",
     "electron-builder": "26.15.3",
+    "esbuild": "0.28.1",
     "jest": "30.4.2",
     "jest-environment-jsdom": "30.4.1",
     "typescript": "7.0.2",
-    "vite": "8.1.5",
     "wait-on": "9.0.10"
   }
 }
