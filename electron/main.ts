@@ -1,57 +1,44 @@
 import { app, BrowserWindow } from 'electron';
-import * as path from 'path';
-import installExtension, { REACT_DEVELOPER_TOOLS } from "electron-devtools-installer";
+import path from 'node:path';
 
-function createWindow() {
-    const window = new BrowserWindow({
-        width: 800,
-        height: 600,
-        webPreferences: {
-            // contextIsolation: false,
-            preload: path.join(__dirname, 'preload.js')
-        }
-    });
+import { createWindowOptions } from './window-options';
 
-    if (app.isPackaged) window.setMenu(null);
+function createWindow(): BrowserWindow {
+  const window = new BrowserWindow(
+    createWindowOptions(path.join(__dirname, 'preload.js')),
+  );
 
-    window.loadURL(app.isPackaged ? `file://${__dirname}/../index.html` : 'http://localhost:3000/index.html').then(() => {
-        window.setTitle(`${app.getName()} - Versión ${app.getVersion()}`);
-    });
+  const devServerUrl = process.env.VITE_DEV_SERVER_URL;
+  const isDevelopment = !app.isPackaged && Boolean(devServerUrl);
 
-    if (!app.isPackaged) {
-        window.webContents.openDevTools();
+  if (isDevelopment && devServerUrl) {
+    void window.loadURL(devServerUrl);
+    window.webContents.openDevTools();
+  } else {
+    void window.loadFile(path.join(__dirname, '../renderer/index.html'));
+    window.setMenu(null);
+  }
 
-        // Hot Reloading on 'node_modules/.bin/electronPath'
-        require('electron-reload')(__dirname, {
-            electron: path.join(__dirname,
-                '..',
-                '..',
-                'node_modules',
-                '.bin',
-                'electron' + (process.platform === "win32" ? ".cmd" : "")),
-            forceHardReset: true,
-            hardResetMethod: 'exit'
-        });
-    }
+  window.once('ready-to-show', () => {
+    window.setTitle(`${app.getName()} v${app.getVersion()}`);
+    window.show();
+  });
+
+  return window;
 }
 
 app.whenReady().then(() => {
-    // DevTools
-    installExtension(REACT_DEVELOPER_TOOLS)
-        .then((name) => console.log(`Added Extension:  ${name}`))
-        .catch((err) => console.log('An error occurred: ', err));
+  createWindow();
 
-    createWindow();
+  app.on('activate', () => {
+    if (BrowserWindow.getAllWindows().length === 0) {
+      createWindow();
+    }
+  });
+});
 
-    app.on('activate', () => {
-        if (BrowserWindow.getAllWindows().length === 0) {
-            createWindow();
-        }
-    });
-
-    app.on('window-all-closed', () => {
-        if (process.platform !== 'darwin') {
-            app.quit();
-        }
-    });
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') {
+    app.quit();
+  }
 });
