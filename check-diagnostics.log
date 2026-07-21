@@ -1,0 +1,6 @@
+
+> react-typescript-electron-base@1.0.0 check
+> tsc --noEmit && tsc -p electron/tsconfig.json --noEmit
+
+src/App.tsx(1,8): error TS2882: Cannot find module or type declarations for side-effect import of './App.css'.
+src/index.tsx(5,8): error TS2882: Cannot find module or type declarations for side-effect import of './index.css'.
