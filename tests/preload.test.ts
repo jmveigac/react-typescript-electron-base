@@ -1,22 +1,20 @@
-import { vi } from 'vitest';
-
-const mocks = vi.hoisted(() => ({
-  exposeInMainWorld: vi.fn(),
-}));
-
-vi.mock('electron', () => ({
+jest.mock('electron', () => ({
   contextBridge: {
-    exposeInMainWorld: mocks.exposeInMainWorld,
+    exposeInMainWorld: jest.fn(),
   },
 }));
 
+import { contextBridge } from 'electron';
+
 import { electronAPI } from '../electron/preload';
+
+const exposeInMainWorldMock = jest.mocked(contextBridge.exposeInMainWorld);
 
 describe('preload bridge', () => {
   it('exposes only the intentional runtime metadata API', () => {
     expect(Object.keys(electronAPI)).toEqual(['platform', 'versions']);
     expect(Object.keys(electronAPI.versions)).toEqual(['electron', 'chrome', 'node']);
-    expect(mocks.exposeInMainWorld).toHaveBeenCalledOnce();
-    expect(mocks.exposeInMainWorld).toHaveBeenCalledWith('electronAPI', electronAPI);
+    expect(exposeInMainWorldMock).toHaveBeenCalledTimes(1);
+    expect(exposeInMainWorldMock).toHaveBeenCalledWith('electronAPI', electronAPI);
   });
 });
