@@ -1,0 +1,10 @@
+
+> react-typescript-electron-base@1.0.0 check
+> tsc --noEmit && tsc -p electron/tsconfig.json --noEmit
+
+src/App.test.tsx(15,7): error TS2339: Property 'toBeInTheDocument' does not exist on type 'JestMatchers<HTMLElement>'.
+src/App.test.tsx(16,49): error TS2339: Property 'toBeInTheDocument' does not exist on type 'JestMatchers<HTMLElement>'.
+src/App.test.tsx(17,52): error TS2339: Property 'toBeInTheDocument' does not exist on type 'JestMatchers<HTMLElement>'.
+src/App.test.tsx(32,50): error TS2339: Property 'toBeInTheDocument' does not exist on type 'JestMatchers<HTMLElement>'.
+src/App.test.tsx(33,49): error TS2339: Property 'toBeInTheDocument' does not exist on type 'JestMatchers<HTMLElement>'.
+src/App.test.tsx(34,72): error TS2339: Property 'toBeInTheDocument' does not exist on type 'JestMatchers<HTMLElement>'.
