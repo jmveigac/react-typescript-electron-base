@@ -1,60 +1,77 @@
-# react-typescript-electron-base
+# React + TypeScript + Electron Base
 
-## React, TS, Electron Base App
+Minimal desktop application template using React, TypeScript, Vite and Electron with secure renderer defaults, Vitest coverage and GitHub Actions CI.
 
-This is a base project to create React Typescript Electron applications
+## Tooling decision
 
-## Available Scripts
+This template uses **Vite instead of Create React App**. Create React App is deprecated for new applications, while this project only needs a client-side renderer inside Electron. Vite keeps the renderer setup small, provides fast development reloads and produces static assets that Electron can package directly.
 
-In the project directory, you can run:
+## Requirements
 
-### `npm start`
+- Node.js 24 LTS recommended; Node.js 22.12+ is the minimum supported runtime for the current toolchain.
+- npm
 
-Runs the app in development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser. 
+## Stack
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+- React 19
+- TypeScript 7
+- Vite 8
+- Electron 43
+- electron-builder
+- Vitest + React Testing Library
 
-### `npm bump:version`
+## Use as a template
 
-Runs the bumpVersion.js script to automatically increment the version number in package.json.
+Create a repository from this template or clone it, then install dependencies:
 
-### `npm prebuild`
+```bash
+npm install
+```
 
-Runs the updateManifest.js script before the build process to ensure manifest.json is updated with the latest data from package.json.
+Start the React renderer and Electron together:
 
-### `npm run build`
+```bash
+npm start
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Renderer changes use Vite hot reload. Changes to the Electron main or preload process require restarting the development command.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Commands
 
-### `npm test`
+| Command | Purpose |
+| --- | --- |
+| `npm start` | Run Vite, compile Electron code in watch mode and launch Electron. |
+| `npm run dev` | Run only the Vite renderer in a browser. |
+| `npm run check` | Type-check the renderer, tests, Electron main process and preload. |
+| `npm test` | Run the Vitest suite once. |
+| `npm run test:watch` | Run Vitest in watch mode. |
+| `npm run build` | Build the renderer and compile Electron TypeScript. |
+| `npm run electron:pack` | Create an unpacked Electron application for the current platform. |
+| `npm run electron:build` | Create distributable packages with electron-builder. |
+| `npm run version:patch` | Increment the patch version in `package.json` and `package-lock.json`. |
 
-Launches the test runner in interactive watch mode.\
-See the section about running tests for more information.
+Generated output is written to `dist/` and packaged applications to `release/`.
 
-### `npm postinstall`
+## Electron security defaults
 
-Runs after all dependencies have been installed. Uses electron-builder to install app dependencies necessary for Electron.
+The renderer runs with:
 
-### `npm run electron:dev`
+- `contextIsolation: true`
+- `nodeIntegration: false`
+- `sandbox: true`
 
-Runs the app in development mode with Electron. Uses concurrently to run multiple commands: disables the default browser, starts the React app, waits for it to be ready, and starts the Electron app.
+The preload bridge exposes only platform information and Electron/Chromium/Node runtime versions. Add new renderer-to-main capabilities deliberately through the preload layer rather than enabling Node.js in the renderer.
 
-### `npm run electron:build`
+Development-only DevTools are opened only when Electron is running against the local Vite development server; packaged builds do not start development tooling.
 
-Builds the React app, compiles TypeScript for Electron, and then packages the Electron app using electron-builder.
+## Tests and CI
 
-### `npm run eject`
+Tests cover the React starter UI, the preload bridge surface and the BrowserWindow security configuration.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Pull requests targeting `main` run three independent GitHub Actions jobs:
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- **Check** — TypeScript validation.
+- **Test** — Vitest test suite.
+- **Build** — Vite production build, Electron TypeScript compilation and an unpacked electron-builder package.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However, we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Dependabot checks npm and GitHub Actions dependencies weekly.
