@@ -8,5 +8,8 @@ module.exports = {
   transform: {
     '^.+\\.[jt]sx?$': 'babel-jest',
   },
+  moduleNameMapper: {
+    '\\.(css|less|scss|sass)$': '<rootDir>/tests/styleMock.cjs',
+  },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
 };
