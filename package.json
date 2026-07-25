@@ -56,6 +56,6 @@
     "jest": "30.4.2",
     "jest-environment-jsdom": "30.4.1",
     "typescript": "7.0.2",
-    "wait-on": "9.0.10"
+    "wait-on": "9.1.0"
   }
 }
