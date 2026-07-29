@@ -6,12 +6,12 @@
   "private": true,
   "scripts": {
     "start": "npm run electron:dev",
-    "dev": "node scripts/renderer.mjs --serve",
-    "build": "node scripts/renderer.mjs --build && tsc -p electron/tsconfig.json",
+    "dev": "node scripts/renderer.js --serve",
+    "build": "node scripts/renderer.js --build && tsc -p electron/tsconfig.json",
     "check": "tsc --noEmit && tsc -p electron/tsconfig.json --noEmit",
     "test": "jest --runInBand",
     "test:watch": "jest --watch",
-    "electron:dev": "concurrently -k \"node scripts/renderer.mjs --serve\" \"tsc -p electron/tsconfig.json --watch --preserveWatchOutput\" \"wait-on tcp:5173 file:dist/electron/main.js && cross-env RENDERER_DEV_SERVER_URL=http://127.0.0.1:5173 electron .\"",
+    "electron:dev": "concurrently -k \"node scripts/renderer.js --serve\" \"tsc -p electron/tsconfig.json --watch --preserveWatchOutput\" \"wait-on tcp:5173 file:dist/electron/main.js && cross-env RENDERER_DEV_SERVER_URL=http://127.0.0.1:5173 electron .\"",
     "electron:pack": "npm run build && electron-builder --dir",
     "electron:build": "npm run build && electron-builder",
     "version:patch": "npm version patch --no-git-tag-version"

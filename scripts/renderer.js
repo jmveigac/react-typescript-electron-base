@@ -1,6 +1,6 @@
-import { build, context } from 'esbuild';
-import { copyFile, mkdir, rm } from 'node:fs/promises';
-import path from 'node:path';
+const { build, context } = require('esbuild');
+const { copyFile, mkdir, rm } = require('node:fs/promises');
+const path = require('node:path');
 
 const rootDir = process.cwd();
 const outDir = path.join(rootDir, 'dist', 'renderer');
